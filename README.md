@@ -5,9 +5,9 @@ In this project, we had to create a REST API using Express. This API provides a 
 ## Usage
 
 - Clone the repo
-- Install dependencies using $ npm install
-- Start the server using $ npm start
-- Create the database using $ npm run seed
+- Install dependencies using `$ npm install`
+- Start the server using `$ npm start`
+- Create the database using `$ npm run seed`
 - Navigate to the browser of choice and enter `http://localhost:5000/` to run the app locally
 - You should see a `Welcome to the REST API project!` message
 - To test the various routes, import the `RESTAPI.postman_collection.json` file into Postman
