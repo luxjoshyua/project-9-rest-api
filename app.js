@@ -27,6 +27,8 @@ app.get("/", (req, res) => {
   try {
     await sequelize.authenticate();
     console.log(`Successfully connected to the database`);
+    // sync the model with the database
+    await sequelize.sync();
   } catch (error) {
     console.error(`Unable to connect to the database, ${error}`);
   }
