@@ -1,11 +1,11 @@
 "use strict";
-const express = require("express");
 
-const { User } = require("../models").User;
+const express = require("express");
+const { Course, User } = require("../models");
 const { asyncHandler } = require("../middleware/async-handler");
 const { authenticateUser } = require("../middleware/auth-user");
 
-// Construct router instance
+// construct router instance
 const router = express.Router();
 
 /**
@@ -38,7 +38,12 @@ router.post(
     try {
       // create new user
       await User.create(req.body);
-      res.location("/").status(201).end();
+      res
+        .location("/")
+        .status(201)
+        // TODO: remember to remove this log before submitting for marking!
+        .json({ message: "User successfully created" })
+        .end();
     } catch (error) {
       console.error(`Error: ${error.name}`);
       if (
@@ -50,6 +55,28 @@ router.post(
         throw error;
       }
     }
+  })
+);
+
+/**
+ * GET
+ *  - returns a list of all courses including the User that owns each course
+ *  - returns 200 HTTP status code
+ */
+
+router.get(
+  "/courses",
+  asyncHandler(async (req, res) => {
+    // find all courses
+    const courses = await Course.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["firstName", "lastName", "emailAddress"],
+        },
+      ],
+    });
+    res.status(200).json(courses);
   })
 );
 

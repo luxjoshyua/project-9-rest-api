@@ -5,6 +5,9 @@ const express = require("express");
 const morgan = require("morgan");
 const { sequelize } = require("./models");
 
+// import the routes
+const routes = require("./routes/routes");
+
 // variable to enable global error logging
 const enableGlobalErrorLogging =
   process.env.ENABLE_GLOBAL_ERROR_LOGGING === "true";
@@ -22,7 +25,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// Test database connection
+// test database connection
 (async () => {
   try {
     await sequelize.authenticate();
@@ -33,6 +36,9 @@ app.get("/", (req, res) => {
     console.error(`Unable to connect to the database, ${error}`);
   }
 })();
+
+// tell routes to use api prefix
+app.use("/api", routes);
 
 // send 404 if no other route matched
 app.use((req, res) => {
