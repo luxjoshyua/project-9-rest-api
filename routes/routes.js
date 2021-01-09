@@ -63,7 +63,6 @@ router.post(
  *  - returns a list of all courses including the User that owns each course
  *  - returns 200 HTTP status code
  */
-
 router.get(
   "/courses",
   asyncHandler(async (req, res) => {
@@ -72,11 +71,73 @@ router.get(
       include: [
         {
           model: User,
+          as: "user",
           attributes: ["firstName", "lastName", "emailAddress"],
         },
       ],
     });
     res.status(200).json(courses);
+  })
+);
+
+/**
+ * GET
+ *  - returns corresponding course
+ *  - returns User that owns that course
+ *  - returns 200 HTTP status code
+ */
+router.get(
+  "/courses/:id",
+  asyncHandler(async (req, res) => {
+    try {
+      // get the corresponding course
+      const course = await Course.findByPk(req.params.id, {
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["firstName", "lastName", "emailAddress"],
+          },
+        ],
+      });
+      if (course) {
+        res.status(200).json(course);
+      } else {
+        res.status(404).json({ message: "Course not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  })
+);
+
+/**
+ * POST
+ *  - creates new course
+ *  - sets Location header to the URI for the newly created course
+ *  - returns 201 HTTP status code and no content
+ */
+
+router.post(
+  "/courses",
+  asyncHandler(async (req, res) => {
+    try {
+      // post new course
+      const course = await Course.create(req.body);
+      res
+        .location("/")
+        .status(201)
+        // TODO: remember to delete this message before submitting for marking
+        .json({ message: "Course successfully created!" })
+        .end();
+    } catch (error) {
+      console.error(`Error: ${error.name}`);
+      if (error.name === "SequelizeValidationError") {
+        const errors = error.errors.map((err) => err.message);
+      } else {
+        throw error;
+      }
+    }
   })
 );
 

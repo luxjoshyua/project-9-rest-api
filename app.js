@@ -18,6 +18,9 @@ const app = express();
 // setup morgan which gives us http request logging
 app.use(morgan("dev"));
 
+// setup request body json parsing
+app.use(express.json());
+
 // setup a friendly greeting for the root route
 app.get("/", (req, res) => {
   res.json({
@@ -31,7 +34,7 @@ app.get("/", (req, res) => {
     await sequelize.authenticate();
     console.log(`Successfully connected to the database`);
     // sync the model with the database
-    await sequelize.sync();
+    // await sequelize.sync();
   } catch (error) {
     console.error(`Unable to connect to the database, ${error}`);
   }
