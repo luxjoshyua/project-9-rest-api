@@ -1,6 +1,7 @@
 "use strict";
 
 const { Model, DataTypes } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {}
   User.init(
@@ -20,15 +21,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "User",
+      // modelName: "User",
     }
   );
 
   // One-to-many association between User and Course models
   User.associate = (models) => {
     User.hasMany(models.Course, {
-      // alias
-      as: "user",
       foreignKey: {
         fieldName: "userId",
       },

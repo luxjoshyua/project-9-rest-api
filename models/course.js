@@ -22,15 +22,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Course",
     }
   );
 
   // One-to-one association between the Course and User models
   Course.associate = (models) => {
     Course.belongsTo(models.User, {
-      // alias
-      as: "user",
       foreignKey: {
         fieldName: "userId",
       },

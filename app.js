@@ -6,7 +6,8 @@ const morgan = require("morgan");
 const { sequelize } = require("./models");
 
 // import the routes
-const routes = require("./routes/routes");
+const usersRoutes = require("./routes/users");
+const coursesRoutes = require("./routes/courses");
 
 // variable to enable global error logging
 const enableGlobalErrorLogging =
@@ -33,7 +34,6 @@ app.get("/", (req, res) => {
   try {
     await sequelize.authenticate();
     console.log(`Successfully connected to the database`);
-    // sync the model with the database
     // await sequelize.sync();
   } catch (error) {
     console.error(`Unable to connect to the database, ${error}`);
@@ -41,7 +41,8 @@ app.get("/", (req, res) => {
 })();
 
 // tell routes to use api prefix
-app.use("/api", routes);
+app.use("/api", usersRoutes);
+app.use("/api", coursesRoutes);
 
 // send 404 if no other route matched
 app.use((req, res) => {
