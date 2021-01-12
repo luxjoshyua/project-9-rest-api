@@ -3,7 +3,7 @@
 const express = require("express");
 const { Course, User } = require("../models");
 const { asyncHandler } = require("../middleware/async-handler");
-// const { authenticateUser } = require("../middleware/auth-user");
+const { authenticateUser } = require("../middleware/auth-user");
 
 // construct router instance
 const router = express.Router();
@@ -69,6 +69,7 @@ router.get(
  */
 router.post(
   "/courses",
+  authenticateUser,
   asyncHandler(async (req, res) => {
     try {
       // post new course
@@ -98,7 +99,7 @@ router.post(
  */
 router.put(
   "/courses/:id",
-
+  authenticateUser,
   asyncHandler(async (req, res, next) => {
     // user is undefined, meaning user id is undefined
     // currentUser comes from the middleware; we're not using it yet, so
