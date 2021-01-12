@@ -3,7 +3,7 @@
 const { Model, DataTypes } = require("sequelize");
 const bcrypt = require("bcryptjs");
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class User extends Model {}
   User.init(
     {
@@ -61,17 +61,13 @@ module.exports = (sequelize, DataTypes) => {
             msg: "A password is required",
           },
           notEmpty: {
-            msg: "Please provide a password",
-          },
-          len: {
-            args: [8, 20],
-            msg: "The password should be between 8 and 20 characters in length",
+            msg: "A password is required",
           },
         },
-        set(val) {
-          const hashedPassword = bcrypt.hashSync(val, 10);
-          this.setDataValue("confirmedPassword", hashedPassword);
-        },
+        // set(val) {
+        //   const hashedPassword = bcrypt.hashSync(val, 10);
+        //   this.setDataValue("confirmedPassword", hashedPassword);
+        // },
       },
     },
     {
@@ -84,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Course, {
       foreignKey: {
         fieldName: "userId",
-        allowNull: true,
+        allowNull: false,
       },
     });
   };

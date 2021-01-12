@@ -1,7 +1,7 @@
 "use strict";
 
 const { Model, DataTypes } = require("sequelize");
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Course extends Model {}
   Course.init(
     {
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     Course.belongsTo(models.User, {
       foreignKey: {
         fieldName: "userId",
-        allowNull: true,
+        allowNull: false,
       },
     });
   };

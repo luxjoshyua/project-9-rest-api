@@ -4,7 +4,7 @@ const express = require("express");
 
 const { asyncHandler } = require("../middleware/async-handler");
 const { authenticateUser } = require("../middleware/auth-user");
-const { User } = require("../models/user");
+const { User } = require("../models");
 
 // construct router instance
 const router = express.Router();
@@ -33,25 +33,21 @@ router.get(
  *  - sets Location header to "/"
  *  - returns 201 HTTP status code and no content
  */
+
 router.post(
   "/users",
   asyncHandler(async (req, res) => {
     try {
-      // create new user
+      // create new User
       await User.create(req.body);
-      res
-        .status(201)
-        .location("/")
-        // TODO: remember to remove this log before submitting for marking!
-        .json({ message: "User successfully created" })
-        .end();
+      res.status(201).location("/").end();
     } catch (error) {
-      console.error(`Error: ${error.name}`);
       if (
         error.name === "SequelizeValidationError" ||
         error.name === "SequelizeUniqueConstraintError"
       ) {
         const errors = error.errors.map((err) => err.message);
+        res.status(400).json({ errors });
       } else {
         throw error;
       }
