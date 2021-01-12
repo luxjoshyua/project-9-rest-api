@@ -3,7 +3,7 @@
 const express = require("express");
 const { Course, User } = require("../models");
 const { asyncHandler } = require("../middleware/async-handler");
-const { authenticateUser } = require("../middleware/auth-user");
+// const { authenticateUser } = require("../middleware/auth-user");
 
 // construct router instance
 const router = express.Router();

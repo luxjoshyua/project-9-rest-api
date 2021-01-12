@@ -6,8 +6,8 @@ const morgan = require("morgan");
 const { sequelize } = require("./models");
 
 // import the routes
-const usersRoutes = require("./routes/users");
-const coursesRoutes = require("./routes/courses");
+const usersRoutes = require("./routes/user");
+const coursesRoutes = require("./routes/course");
 
 // variable to enable global error logging
 const enableGlobalErrorLogging =

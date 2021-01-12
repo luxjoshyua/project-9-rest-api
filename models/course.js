@@ -7,9 +7,27 @@ module.exports = (sequelize, DataTypes) => {
     {
       title: {
         type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Please enter a title for your course",
+          },
+          notEmpty: {
+            msg: "Please enter a title for your course",
+          },
+        },
       },
       description: {
         type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Please enter a description for your course",
+          },
+          notEmpty: {
+            msg: "Please enter a description for your course",
+          },
+        },
       },
       estimatedTime: {
         type: DataTypes.STRING,
@@ -30,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     Course.belongsTo(models.User, {
       foreignKey: {
         fieldName: "userId",
+        allowNull: true,
       },
     });
   };
