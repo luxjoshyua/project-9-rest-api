@@ -41,9 +41,6 @@ router.get(
     try {
       // get the corresponding course
       const course = await Course.findByPk(req.params.id, {
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
         include: {
           model: User,
           attributes: ["firstName", "lastName", "emailAddress"],
@@ -74,11 +71,7 @@ router.post(
     try {
       // post new course
       const course = await Course.create(req.body);
-      res
-        .location("/courses" + course.id)
-        .status(201)
-        .json({ message: "Course successfully created!" })
-        .end();
+      res.location(`/courses/${course.id}`).status(201).end();
     } catch (error) {
       console.error(`Error: ${error.name}`);
       if (error.name === "SequelizeValidationError") {

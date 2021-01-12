@@ -33,7 +33,6 @@ router.get(
  *  - sets Location header to "/"
  *  - returns 201 HTTP status code and no content
  */
-
 router.post(
   "/users",
   asyncHandler(async (req, res) => {

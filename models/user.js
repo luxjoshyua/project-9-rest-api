@@ -38,17 +38,17 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: {
-          msg: "The email you entered already exists",
+          msg: "This email address already exists",
         },
         validate: {
-          notNull: {
-            msg: "An email is required",
-          },
           isEmail: {
-            msg: "Please provide a valid email address",
+            msg: "Email address is not valid",
+          },
+          notNull: {
+            msg: 'Please provide an "email address"',
           },
           notEmpty: {
-            msg: "Please provide an email",
+            msg: 'Please provide an "email address"',
           },
         },
       },
@@ -58,21 +58,19 @@ module.exports = (sequelize) => {
         allowNull: false,
         validate: {
           notNull: {
-            msg: "A password is required",
+            msg: 'Please provide a "password"',
           },
           notEmpty: {
-            msg: "A password is required",
+            msg: 'Please provide a "password"',
           },
         },
-        // set(val) {
-        //   const hashedPassword = bcrypt.hashSync(val, 10);
-        //   this.setDataValue("confirmedPassword", hashedPassword);
-        // },
+        set(val) {
+          const hashedPass = bcrypt.hashSync(val, 10);
+          this.setDataValue("password", hashedPass);
+        },
       },
     },
-    {
-      sequelize,
-    }
+    { sequelize }
   );
 
   // One-to-many association between User and Course models
