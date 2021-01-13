@@ -89,53 +89,41 @@ router.post(
  *  - updates the corresponding course
  *  - returns 204 HTTP status code and no content
  */
-// router.put(
-//   "/courses/:id",
-//   authenticateUser,
-//   asyncHandler(async (req, res, next) => {
-//     // user is undefined, meaning user id is undefined
-//     // currentUser comes from the middleware; we're not using it yet, so
-//     // of course it's undefined
-//     const user = req.currentUser;
-//     console.log(`What is my user: ${user}`);
-//     const course = await Course.findByPk(req.params.id, {
-//       include: User,
-//     });
+router.put(
+  "/courses/:id",
+  authenticateUser,
+  asyncHandler(async (req, res) => {
+    const user = req.currentUser;
+    const course = await Course.findByPk(req.params.id, {
+      include: User,
+    });
 
-//     if (course) {
-//       // check current user is connected to the course
-//       // console.log(`What is this course id here: ${course.userId}`);
-
-//       if (user.emailAddress === course.User.emailAddress) {
-//         try {
-//           // const [updated] = await Course.update(req.body, {
-//           //   where: {
-//           //     id: req.params.id,
-//           //   },
-//           // });
-//           // if (updated) {
-//           //   res.status(204).end();
-//           // } else {
-//           //   res.sendStatus(400);
-//           // }
-//         } catch (error) {
-//           // if (error.name === "SequelizeValidationError") {
-//           //   const errors = error.errors.map((err) => err.message);
-//           //   res.status(400).json({ errors });
-//           // } else {
-//           //   next(error);
-//           // }
-//         }
-//       } else {
-//         // access not allowed to the db
-//         res.status(404);
-//       }
-//     } else {
-//       // not found
-//       res.status(404);
-//     }
-//   })
-// );
+    if (course) {
+      // check current user is connected to the course
+      if (user.emailAddress === course.User.emailAddress) {
+        try {
+          const [updated] = await Course.update(req.body, {
+            where: {
+              id: req.params.id,
+            },
+          });
+          if (updated) {
+            res.status(204).end();
+          } else {
+            res.sendStatus(400);
+          }
+        } catch (error) {
+          if (error.name === "SequelizeValidationError") {
+            const errors = error.errors.map((err) => err.message);
+            res.status(400).json({ errors });
+          } else {
+            throw error;
+          }
+        }
+      }
+    }
+  })
+);
 
 /**
  * DELETE
