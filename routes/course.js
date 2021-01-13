@@ -130,46 +130,29 @@ router.put(
  *  - deletes corresponding course
  *  - returns 204 HTTP status code and no content
  */
-// router.delete(
-//   "/courses/:id",
-//   asyncHandler(async (req, res) => {
-//     // find the course to delete
-//     const course = await Course.findByPk(req.params.id);
-//     console.log(`What is my course here: ${course}`);
-//     if (course) {
-//       // check if the user email address === the course User email address
-//       if (user.emailAddress !== course.User.emailAddress) {
-//         res.status(403).json({ message: "Access denied" }).end();
-//       } else {
-//         await course.destroy();
-//         res
-//           .status(204)
-//           .message({ message: "You successfully deleted the course" })
-//           .end();
-//       }
-//     } else {
-//       res.status(404).json({
-//         message: "You tried to delete a course that does not exist.",
-//       });
-//     }
-//   })
-// );
+router.delete(
+  "/courses/:id",
+  authenticateUser,
+  asyncHandler(async (req, res) => {
+    const user = req.currentUser;
+    const course = await Course.findByPk(req.params.id, {
+      include: User,
+    });
 
-// router.delete(
-//   "/courses/:id",
-//   asyncHandler(async (req, res) => {
-//     res.status(204).end();
-
-//     // const course = await Course.findByPk(req.params.id);
-//     // check the course actually exists, otherwise it will just hang
-//     // console.log(`What is my course here: ${course}`);
-//     // if (course) {
-//     //   await course.destroy();
-//     //   res.status(204).end();
-//     // } else {
-//     //   res.status(404);
-//     // }
-//   })
-// );
+    if (course) {
+      // check if the user email address === the course User email address
+      if (user.emailAddress === course.User.emailAddress) {
+        await course.destroy();
+        res.status(204).end();
+      } else {
+        res.status(403).json({ message: "Access denied" });
+      }
+    } else {
+      res.status(404).json({
+        message: "You tried to delete a course that does not exist.",
+      });
+    }
+  })
+);
 
 module.exports = router;
