@@ -94,32 +94,30 @@ router.put(
   authenticateUser,
   asyncHandler(async (req, res) => {
     const user = req.currentUser;
-    const course = await Course.findByPk(req.params.id, {
-      include: User,
-    });
 
-    if (course) {
-      // check current user is connected to the course
+    try {
+      const course = await Course.findByPk(req.params.id, {
+        include: {
+          model: User,
+        },
+      });
+
       if (user.emailAddress === course.User.emailAddress) {
-        try {
-          const [updated] = await Course.update(req.body, {
-            where: {
-              id: req.params.id,
-            },
-          });
-          if (updated) {
-            res.status(204).end();
-          } else {
-            res.sendStatus(400);
-          }
-        } catch (error) {
-          if (error.name === "SequelizeValidationError") {
-            const errors = error.errors.map((err) => err.message);
-            res.status(400).json({ errors });
-          } else {
-            throw error;
-          }
+        if (course) {
+          await course.update(req.body);
+          res.sendStatus(204);
+        } else {
+          res.sendStatus(404);
         }
+      } else {
+        res.sendStatus(403).json({ message: "Access denied" });
+      }
+    } catch (error) {
+      if (error.name === "SequelizeValidationError") {
+        const errors = error.errors.map((err) => err.message);
+        res.status(400).json({ errors });
+      } else {
+        throw error;
       }
     }
   })
