@@ -21,7 +21,7 @@ router.get(
       include: [
         {
           model: User,
-          attributes: ["firstName", "lastName", "emailAddress"],
+          attributes: ["firstName", "lastName", "emailAddress", "password"],
         },
       ],
     });
@@ -43,7 +43,7 @@ router.get(
       const course = await Course.findByPk(req.params.id, {
         include: {
           model: User,
-          attributes: ["firstName", "lastName", "emailAddress"],
+          attributes: ["firstName", "lastName", "emailAddress", "password"],
         },
       });
 
@@ -101,7 +101,7 @@ router.put(
           model: User,
         },
       });
-
+      // check if the user email address === the course User email address
       if (user.emailAddress === course.User.emailAddress) {
         if (course) {
           await course.update(req.body);

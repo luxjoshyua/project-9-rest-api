@@ -20,6 +20,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const user = req.currentUser;
     // filter the response
+
     res.status(200).json({
       firstName: user.firstName,
       lastName: user.lastName,
