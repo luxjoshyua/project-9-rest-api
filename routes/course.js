@@ -18,10 +18,17 @@ router.get(
   asyncHandler(async (req, res) => {
     // find all courses
     const courses = await Course.findAll({
+      attributes: [
+        "id",
+        "title",
+        "description",
+        "estimatedTime",
+        "materialsNeeded",
+      ],
       include: [
         {
           model: User,
-          attributes: ["firstName", "lastName", "emailAddress", "password"],
+          attributes: ["id", "firstName", "lastName", "emailAddress"],
         },
       ],
     });
@@ -41,9 +48,16 @@ router.get(
     try {
       // get the corresponding course
       const course = await Course.findByPk(req.params.id, {
+        attributes: [
+          "id",
+          "title",
+          "description",
+          "estimatedTime",
+          "materialsNeeded",
+        ],
         include: {
           model: User,
-          attributes: ["firstName", "lastName", "emailAddress", "password"],
+          attributes: ["id", "firstName", "lastName", "emailAddress"],
         },
       });
 
@@ -110,7 +124,7 @@ router.put(
           res.sendStatus(404);
         }
       } else {
-        res.sendStatus(403).json({ message: "Access denied" });
+        res.sendStatus(500).json({ message: "Access denied" });
       }
     } catch (error) {
       if (error.name === "SequelizeValidationError") {
