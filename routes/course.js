@@ -124,7 +124,7 @@ router.put(
           res.sendStatus(404);
         }
       } else {
-        res.sendStatus(500).json({ message: "Access denied" });
+        res.sendStatus(403).json({ message: "Access denied" });
       }
     } catch (error) {
       if (error.name === "SequelizeValidationError") {
@@ -151,18 +151,15 @@ router.delete(
       include: User,
     });
 
-    if (course) {
-      // check if the user email address === the course User email address
-      if (user.emailAddress === course.User.emailAddress) {
+    if (user.emailAddress === course.User.emailAddress) {
+      if (course) {
         await course.destroy();
-        res.status(204).end();
+        res.sendStatus(204);
       } else {
-        res.status(403).json({ message: "Access denied" });
+        res.sendStatus(404);
       }
     } else {
-      res.status(404).json({
-        message: "You tried to delete a course that does not exist.",
-      });
+      res.sendStatus(403);
     }
   })
 );
